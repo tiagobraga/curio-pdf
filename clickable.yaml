@@ -1,0 +1,4 @@
+kill: qmlscene
+builder: pure-qml-cmake
+scripts:
+  test: python3 test_integrity.py

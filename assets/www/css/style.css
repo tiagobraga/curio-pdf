@@ -1,0 +1,832 @@
+/* Design System Móvel Touch-First para Curió PDF no Ubuntu Touch */
+:root {
+  --bg-color: #f7f7f7;
+  --bg-header: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-bar: #ffffff;
+  --text-main: #111111;
+  --text-muted: #666666;
+  --border-color: #e5e5e5;
+  --primary-color: #e95420; /* Laranja Ubuntu */
+  --primary-hover: #d34615;
+  --primary-soft: rgba(233, 84, 32, 0.12);
+  --shadow-header: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-bar: 0 -2px 10px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --highlight-yellow: #ffeb3b;
+  --highlight-green: #69f0ae;
+  --highlight-blue: #40c4ff;
+  --highlight-pink: #ff80ab;
+  --touch-target-min: 48px;
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --bg-header: #1f1f1f;
+  --bg-surface: #262626;
+  --bg-bar: #1f1f1f;
+  --text-main: #f5f5f5;
+  --text-muted: #a0a0a0;
+  --border-color: #333333;
+  --primary-soft: rgba(233, 84, 32, 0.25);
+  --shadow-header: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --shadow-bar: 0 -2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Ubuntu", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. Top Bar Móvel Fixa */
+.mobile-header {
+  height: 56px;
+  min-height: 56px;
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  z-index: 110;
+  box-shadow: var(--shadow-header);
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.doc-title-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 6px;
+  max-width: calc(100vw - 170px);
+}
+
+.doc-title {
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.doc-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Botões de Toque Móveis Grandes (min 48x48px) */
+.touch-btn {
+  background: none;
+  border: none;
+  min-width: 48px;
+  min-height: 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.touch-btn.sm {
+  min-width: 42px;
+  min-height: 42px;
+  width: 42px;
+  height: 42px;
+}
+
+.touch-btn:active {
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: scale(0.95);
+}
+
+[data-theme="dark"] .touch-btn:active {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.touch-btn.active {
+  background-color: var(--primary-soft);
+  color: var(--primary-color);
+}
+
+.touch-btn svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+.btn-label {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 2px;
+  color: var(--text-muted);
+}
+
+.touch-btn.active .btn-label {
+  color: var(--primary-color);
+}
+
+/* Botão de Destaque Central na Barra Inferior */
+.main-highlight-btn {
+  min-width: 52px;
+  min-height: 52px;
+  border-radius: 12px;
+  background-color: transparent;
+  color: var(--text-main);
+}
+
+.main-highlight-btn .btn-label {
+  color: var(--text-muted);
+}
+
+.main-highlight-btn.active {
+  background-color: var(--primary-soft);
+  color: var(--primary-color);
+}
+
+.main-highlight-btn.active .btn-label {
+  color: var(--primary-color);
+}
+
+/* 2. Barra de Busca Móvel */
+.mobile-search-bar {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 105;
+}
+
+.search-input {
+  flex: 1;
+  height: 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-color);
+  color: var(--text-main);
+  padding: 0 14px;
+  font-size: 15px;
+  outline: none;
+}
+
+.search-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 45px;
+  text-align: center;
+}
+
+/* 3. Barra de Ferramentas de Marca-Texto Móvel */
+.mobile-highlighter-tools {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 104;
+  animation: slideDown 0.18s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.mode-selector {
+  display: flex;
+  background: var(--bg-color);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.touch-pill {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.touch-pill svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.touch-pill.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.color-palette {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.touch-color {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s;
+}
+
+.touch-color.selected {
+  transform: scale(1.22);
+  border-color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dot-yellow { background-color: var(--highlight-yellow); }
+.dot-green { background-color: var(--highlight-green); }
+.dot-blue { background-color: var(--highlight-blue); }
+.dot-pink { background-color: var(--highlight-pink); }
+
+/* 4. Conteúdo Principal e Tela Inicial Móvel */
+.mobile-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-home-view {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-color);
+  z-index: 50;
+}
+
+.app-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
+  margin-bottom: 28px;
+}
+
+.app-icon-img {
+  width: 104px;
+  height: 104px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 14px;
+}
+
+.app-name {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.app-tagline {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Botão Primário Móvel Grande (54px) */
+.mobile-open-btn {
+  width: 100%;
+  max-width: 400px;
+  height: 54px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(233, 84, 32, 0.35);
+  margin-bottom: 32px;
+  transition: transform 0.1s, background-color 0.15s;
+}
+
+.mobile-open-btn:active {
+  background-color: var(--primary-hover);
+  transform: scale(0.98);
+}
+
+.mobile-open-btn svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+/* Seção de Recentes Móvel */
+.recents-section {
+  width: 100%;
+  max-width: 480px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recent-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.recent-card:active {
+  border-color: var(--primary-color);
+  transform: scale(0.99);
+}
+
+.recent-info {
+  flex: 1;
+  overflow: hidden;
+  padding-right: 14px;
+}
+
+.recent-filename {
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-main);
+}
+
+.recent-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recent-progress-bar {
+  height: 5px;
+  background: var(--border-color);
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.recent-progress-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+}
+
+.empty-recents {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 30px 16px;
+}
+
+/* 5. Visualizador de PDF com Rolagem Contínua (Design Limpo e Elegante inspirado no Assinei!) */
+.mobile-pdf-container {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px 8px 90px; /* Margem inferior para a Bottom Bar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e5e7eb; /* Cinza suave de leitura que destaca a página de papel */
+}
+
+[data-theme="dark"] .mobile-pdf-container {
+  background-color: #18181b;
+}
+
+[data-theme="dark"] .mobile-pdf-container.invert-pdf .page-canvas {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+.page-container {
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #d1d5db;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .page-container {
+  border-color: #3f3f46;
+}
+
+.page-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.page-loading-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 500;
+  background: rgba(243, 244, 246, 0.85);
+}
+
+.textLayer {
+  position: absolute;
+  text-align: initial;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 1;
+  line-height: 1.0;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  z-index: 2;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto;
+}
+
+.textLayer,
+.textLayer * {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+}
+
+.textLayer span,
+.textLayer span.markedContent,
+.textLayer br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto;
+}
+
+.textLayer ::selection,
+.textLayer *::selection {
+  background: rgba(233, 84, 32, 0.4) !important;
+}
+
+.textLayer ::-moz-selection,
+.textLayer *::-moz-selection {
+  background: rgba(233, 84, 32, 0.4) !important;
+}
+
+.textLayer .highlight {
+  background-color: rgba(255, 235, 59, 0.5);
+  border-radius: 2px;
+}
+
+.highlight-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hl-rect {
+  position: absolute;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  cursor: pointer;
+  pointer-events: auto;
+  border-radius: 2px;
+}
+
+[data-theme="dark"] .hl-rect {
+  mix-blend-mode: screen;
+  opacity: 0.65;
+}
+
+/* Modo Marca-texto ativo: eleva a textLayer e desativa captura dos retângulos para permitir seleção fluida */
+body.mode-highlighter-text .textLayer {
+  z-index: 4;
+}
+
+body.mode-highlighter-text .textLayer,
+body.mode-highlighter-text .textLayer * {
+  cursor: text !important;
+}
+
+body.mode-highlighter-text .hl-rect {
+  pointer-events: none !important;
+}
+
+.ink-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.ink-canvas.active {
+  pointer-events: auto;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* 6. Bottom Bar Móvel Fixa */
+.mobile-bottom-bar {
+  height: 64px;
+  min-height: 64px;
+  background-color: var(--bg-bar);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 12px;
+  z-index: 110;
+  box-shadow: var(--shadow-bar);
+}
+
+/* Popover Flutuante Móvel (Toque Amigável) */
+.highlight-popover {
+  position: fixed;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-pop);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 130;
+  animation: popIn 0.15s ease-out;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.highlight-popover .color-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.highlight-popover .color-dot.selected {
+  transform: scale(1.15);
+  border-color: var(--text-main);
+}
+
+.delete-btn {
+  color: #f44336;
+  border: none;
+  background: none;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-left: 1px solid var(--border-color);
+  padding-left: 8px;
+}
+
+.delete-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* 7. Drawer Lateral Móvel */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 85%;
+  max-width: 360px;
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-pop);
+  z-index: 160;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.drawer-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.drawer-tab {
+  flex: 1;
+  text-align: center;
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.drawer-tab.active {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px;
+}
+
+.outline-item {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+
+.outline-item:active {
+  background-color: var(--primary-soft);
+  color: var(--primary-color);
+}
+
+.highlight-list-item {
+  background-color: var(--bg-color);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-left: 5px solid var(--highlight-yellow);
+  cursor: pointer;
+}
+
+.highlight-item-text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-main);
+  user-select: text;
+}
+
+.highlight-item-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Toast Móvel */
+.mobile-toast {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background-color: rgba(20, 20, 20, 0.92);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 200;
+  backdrop-filter: blur(8px);
+  text-align: center;
+  max-width: 90vw;
+}
+
+.mobile-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
