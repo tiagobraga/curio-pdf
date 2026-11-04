@@ -376,6 +376,15 @@ class PdfViewer {
     }
   }
 
+  setZoomTo(targetZoom) {
+    const newZoom = Math.min(Math.max(targetZoom, 0.6), 2.5);
+    if (Math.abs(newZoom - this.zoomMultiplier) > 0.05) {
+      this.zoomMultiplier = newZoom;
+      this._calculateScale();
+      this._rebuildLayout();
+    }
+  }
+
   fitToWidth() {
     this.zoomMultiplier = 1.0;
     this._calculateScale();

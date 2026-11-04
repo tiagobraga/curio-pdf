@@ -368,6 +368,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Gesto de Pinch-to-zoom exclusivo nas páginas do PDF (mantém ferramentas e paletas no tamanho original)
+  let initialPinchDist = null;
+  let initialPinchZoom = 1.0;
+
+  elements.pdfContainer.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      initialPinchDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      initialPinchZoom = pdfViewer.zoomMultiplier;
+    }
+  }, { passive: true });
+
+  elements.pdfContainer.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && initialPinchDist) {
+      const currentDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const ratio = currentDist / initialPinchDist;
+      const targetZoom = initialPinchZoom * ratio;
+      if (Math.abs(targetZoom - pdfViewer.zoomMultiplier) > 0.12) {
+        pdfViewer.setZoomTo(targetZoom);
+      }
+    }
+  }, { passive: true });
+
+  elements.pdfContainer.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) {
+      initialPinchDist = null;
+    }
+  }, { passive: true });
+
   // Tema Noturno
   elements.btnTheme.addEventListener('click', () => {
     if (!isDarkMode) {

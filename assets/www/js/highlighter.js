@@ -183,21 +183,8 @@ class PdfHighlighter {
 
     if (mergedRects.length === 0) return;
 
-    // Se o modo marca-texto estiver ativo, aplica diretamente
-    if (this.activeMode === 'text') {
-      this._createHighlight({
-        docId: this.viewer.docId,
-        pageNumber: pageNum,
-        type: 'text',
-        color: this.currentColor,
-        rects: mergedRects,
-        text: text
-      });
-      selection.removeAllRanges();
-    } else {
-      // Exibe popover para o usuário escolher aplicar ou cancelar
-      this._showSelectionMenu(e, pageEl, mergedRects, text, pageNum);
-    }
+    // Exibe a barra de opções de cores dockada na borda da tela (fora do texto e das alças)
+    this._showSelectionMenu(e, pageEl, mergedRects, text, pageNum, range);
   }
 
   _mergeLineRects(rects) {
@@ -325,10 +312,22 @@ class PdfHighlighter {
   }
 
   // Popovers de Interação
-  _showSelectionMenu(e, pageEl, rects, text, pageNum) {
+  _showSelectionMenu(e, pageEl, rects, text, pageNum, range) {
+    if (this.activePopover && this.activePopover._isSelectionMenu) {
+      // Se a barra já estiver aberta, atualiza a seleção dinamicamente para permitir expandir sem cobrir o texto
+      this.activePopover._rects = rects;
+      this.activePopover._text = text;
+      this.activePopover._pageNum = pageNum;
+      return;
+    }
+
     this._closePopover();
     const pop = document.createElement('div');
-    pop.className = 'highlight-popover';
+    pop.className = 'highlight-popover docked-bottom';
+    pop._isSelectionMenu = true;
+    pop._rects = rects;
+    pop._text = text;
+    pop._pageNum = pageNum;
 
     const colors = [
       { name: 'yellow', hex: '#ffeb3b' },
@@ -339,16 +338,16 @@ class PdfHighlighter {
 
     colors.forEach(c => {
       const dot = document.createElement('div');
-      dot.className = `color-dot dot-${c.name}`;
+      dot.className = `color-dot dot-${c.name} ${this.currentColor === c.hex ? 'selected' : ''}`;
       dot.title = `Destacar em ${c.name}`;
       dot.onclick = () => {
         this._createHighlight({
           docId: this.viewer.docId,
-          pageNumber: pageNum,
+          pageNumber: pop._pageNum,
           type: 'text',
           color: c.hex,
-          rects: rects,
-          text: text
+          rects: pop._rects,
+          text: pop._text
         });
         window.getSelection().removeAllRanges();
         this._closePopover();
@@ -356,23 +355,37 @@ class PdfHighlighter {
       pop.appendChild(dot);
     });
 
+    // Botão Fechar para cancelar a seleção
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'popover-close-btn';
+    closeBtn.title = 'Cancelar';
+    closeBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    `;
+    closeBtn.onclick = () => {
+      window.getSelection().removeAllRanges();
+      this._closePopover();
+    };
+    pop.appendChild(closeBtn);
+
     document.body.appendChild(pop);
     this.activePopover = pop;
 
-    const touch = (e && e.changedTouches && e.changedTouches[0]) || (e && e.touches && e.touches[0]);
-    const clientX = touch ? touch.clientX : (e && typeof e.clientX === 'number' ? e.clientX : window.innerWidth / 2);
-    const clientY = touch ? touch.clientY : (e && typeof e.clientY === 'number' ? e.clientY : window.innerHeight / 2);
-
-    const x = Math.min(Math.max(clientX - 60, 10), window.innerWidth - 160);
-    const y = Math.max(clientY - 50, 60);
-    pop.style.left = `${x}px`;
-    pop.style.top = `${y}px`;
+    // Se o texto selecionado estiver muito próximo do rodapé, ancora no topo abaixo do cabeçalho
+    const clientRects = Array.from(range ? range.getClientRects() : []);
+    const lastRect = clientRects[clientRects.length - 1];
+    if (lastRect && lastRect.bottom > window.innerHeight - 150) {
+      pop.classList.remove('docked-bottom');
+      pop.classList.add('docked-top');
+    }
   }
 
   _showHighlightOptions(highlight, targetEl) {
     this._closePopover();
     const pop = document.createElement('div');
-    pop.className = 'highlight-popover';
+    pop.className = 'highlight-popover docked-bottom';
 
     const colors = [
       { name: 'yellow', hex: '#ffeb3b' },
@@ -414,14 +427,27 @@ class PdfHighlighter {
     };
     pop.appendChild(delBtn);
 
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'popover-close-btn';
+    closeBtn.title = 'Fechar';
+    closeBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    `;
+    closeBtn.onclick = () => {
+      this._closePopover();
+    };
+    pop.appendChild(closeBtn);
+
     document.body.appendChild(pop);
     this.activePopover = pop;
 
     const rect = targetEl.getBoundingClientRect();
-    const x = Math.min(Math.max(rect.left + rect.width / 2 - 80, 10), window.innerWidth - 180);
-    const y = Math.max(rect.top - 45, 60);
-    pop.style.left = `${x}px`;
-    pop.style.top = `${y}px`;
+    if (rect && rect.bottom > window.innerHeight - 150) {
+      pop.classList.remove('docked-bottom');
+      pop.classList.add('docked-top');
+    }
   }
 
   _closePopover() {
