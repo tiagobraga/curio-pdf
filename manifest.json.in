@@ -10,7 +10,7 @@
             "content-hub": "leitorpdf.content-hub"
         }
     },
-    "version": "1.1.2",
+    "version": "1.1.3",
     "framework": "ubuntu-touch-24.04-1.x",
     "maintainer": "Tiago Braga <tiago.braga@gmail.com>"
 }

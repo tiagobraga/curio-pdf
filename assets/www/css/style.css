@@ -44,6 +44,11 @@
   user-select: none;
 }
 
+html, body {
+  touch-action: pan-x pan-y;
+  overscroll-behavior: none;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Ubuntu", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color);
@@ -67,6 +72,7 @@ body {
   padding: 0 8px;
   z-index: 110;
   box-shadow: var(--shadow-header);
+  touch-action: none;
 }
 
 .header-left, .header-right {
@@ -186,6 +192,7 @@ body {
   align-items: center;
   gap: 8px;
   z-index: 105;
+  touch-action: none;
 }
 
 .search-input {
@@ -217,6 +224,7 @@ body {
   align-items: center;
   justify-content: space-between;
   z-index: 104;
+  touch-action: none;
   animation: slideDown 0.18s ease-out;
 }
 
@@ -461,10 +469,20 @@ body {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding: 16px 8px 90px; /* Margem inferior para a Bottom Bar */
+  background-color: #e5e7eb; /* Cinza suave de leitura que destaca a página de papel */
+  touch-action: pan-x pan-y;
+  box-sizing: border-box;
+}
+
+.pdf-pages-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #e5e7eb; /* Cinza suave de leitura que destaca a página de papel */
+  min-width: 100%;
+  width: max-content;
+  box-sizing: border-box;
+  transform-origin: 50% 0%;
+  will-change: transform;
 }
 
 [data-theme="dark"] .mobile-pdf-container {
@@ -525,17 +543,7 @@ body {
   forced-color-adjust: none;
   transform-origin: 0 0;
   z-index: 2;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
-  pointer-events: auto;
-}
-
-.textLayer,
-.textLayer * {
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
+  pointer-events: none;
 }
 
 .textLayer span,
@@ -544,12 +552,9 @@ body {
   color: transparent;
   position: absolute;
   white-space: pre;
-  cursor: text;
+  cursor: default;
   transform-origin: 0% 0%;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .textLayer ::selection,
@@ -591,14 +596,19 @@ body {
   opacity: 0.65;
 }
 
-/* Modo Marca-texto ativo: eleva a textLayer e desativa captura dos retângulos para permitir seleção fluida */
+/* Modo Marca-texto ativo: eleva a textLayer e ativa seleção fluida */
 body.mode-highlighter-text .textLayer {
   z-index: 4;
+  pointer-events: auto;
 }
 
 body.mode-highlighter-text .textLayer,
 body.mode-highlighter-text .textLayer * {
   cursor: text !important;
+  pointer-events: auto;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
 }
 
 body.mode-highlighter-text .hl-rect {
@@ -630,9 +640,18 @@ body.mode-highlighter-text .hl-rect {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 12px;
+  padding: 0 4px;
   z-index: 110;
   box-shadow: var(--shadow-bar);
+  touch-action: none;
+}
+
+.mobile-bottom-bar .touch-btn {
+  flex: 1;
+  min-width: 38px;
+  max-width: 54px;
+  height: 52px;
+  padding: 2px 1px;
 }
 
 /* Popover Flutuante Móvel (Toque Amigável) */
@@ -867,4 +886,135 @@ body.mode-highlighter-text .hl-rect {
 .mobile-toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* 7. Modal Sobre / About */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 190;
+  animation: fadeIn 0.15s ease-out;
+  touch-action: none;
+}
+
+.about-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 440px;
+  max-height: 85vh;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-pop);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-modal-header {
+  height: 54px;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.about-modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.about-modal-body {
+  padding: 20px 18px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.about-app-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.about-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+}
+
+.about-badge-text .about-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.about-badge-text .about-version {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.about-text-content p {
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: var(--text-main);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.about-text-content p:last-child {
+  margin-bottom: 0;
+}
+
+.about-text-content a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.home-about-footer {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.home-about-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 8px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: background-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.home-about-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.home-about-btn:active {
+  background-color: var(--primary-soft);
+  color: var(--primary-color);
+  transform: scale(0.96);
 }

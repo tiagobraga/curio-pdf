@@ -6,11 +6,12 @@ This folder contains the compiled `.click` packages along with all metadata, tex
 
 ## 📦 1. Available `.click` Packages
 
-* **Current Release:** [`leitorpdf.braga_1.1.2_all.click`](leitorpdf.braga_1.1.2_all.click) (1.2 MB)
+* **Current Release:** [`leitorpdf.braga_1.1.3_all.click`](leitorpdf.braga_1.1.3_all.click) (1.2 MB)
   * **Architecture:** `all` (multi-arch: `arm64`, `armhf`, `amd64`)
   * **Framework:** `ubuntu-touch-24.04-1.x` (compatible with both Ubuntu Touch Focal 20.04 and Noble 24.04)
   * **Clickable Review Status:** `pass` (fully compliant with Lomiri security and confinement standards)
 * **Previous Versions:**
+  * `leitorpdf.braga_1.1.2_all.click`
   * `leitorpdf.braga_1.1.1_all.click`
   * `leitorpdf.braga_1.1.0_all.click`
   * `leitorpdf.braga_1.0.0_all.click`
@@ -90,13 +91,13 @@ Engineered for comfortable reading and thumb-friendly touch interactions, Curió
 
 ---
 
-### Version 1.1.2 Changelog
+### Version 1.1.3 Changelog
 ```text
-v1.1.2:
-- Non-obstructive highlight picker: color options dock at the screen edge, never covering selected text or drag handles.
-- Isolated document zoom: pinch-to-zoom and zoom buttons scale strictly the PDF pages, preserving toolbars and color palettes at their original size.
-- Highlight tool button defaults to neutral appearance and turns orange only when active.
-- Enhanced text selection layer with improved touch gesture handling for Ubuntu Touch.
+v1.1.3:
+- Strict viewport zoom isolation: Top and bottom bars remain 100% fixed during pinch-to-zoom gestures, scaling strictly the PDF document.
+- Fluid PDF drag & pan: Added smooth horizontal and vertical touch panning when zoomed in so reading overflowing text is completely frictionless.
+- Added "About" (Sobre) button to bottom bar and home screen featuring project background, research group link (curio.ia.br), and Lattes CV.
+- Preserved neutral highlighter button state and non-obstructive color palette docking.
 ```
 
 ---
@@ -114,11 +115,11 @@ v1.1.2:
 3. **Fill in Details:**
    * **Package Name:** `leitorpdf.braga`
    * Paste the **Title**, **Summary / Tagline**, **Description**, choose **Office** under Category, and set the **Tags**.
-   * Add the **Changelog for v1.1.2**.
+   * Add the **Changelog for v1.1.3**.
 
 4. **Upload the `.click` Package:**
    * In the package upload field, upload:
-     `openstore/leitorpdf.braga_1.1.2_all.click`
+     `openstore/leitorpdf.braga_1.1.3_all.click`
 
 5. **Screenshots:**
    * It is highly recommended to upload 2 to 4 screenshots from your phone:
@@ -138,7 +139,7 @@ v1.1.2:
 
 ## 🐙 4. Step-by-Step GitHub Submission Guide
 
-The local Git repository is already configured on the `main` branch with clean commits and tagged as `v1.1.2`.
+The local Git repository is already configured on the `main` branch with clean commits and tagged as `v1.1.3`.
 
 ### Step 1: Create the Repository on GitHub
 1. Open [https://github.com/new](https://github.com/new).
@@ -160,10 +161,10 @@ git remote add origin https://github.com/tiagobraga/curio-pdf.git
 git push -u origin main --tags
 ```
 
-### Step 3: Create GitHub Release v1.1.2
+### Step 3: Create GitHub Release v1.1.3
 1. In your GitHub repository, open the **Releases** section in the right sidebar (or [https://github.com/tiagobraga/curio-pdf/releases/new](https://github.com/tiagobraga/curio-pdf/releases/new)).
-2. Under **Choose a tag**, select **`v1.1.2`**.
-3. In **Release title**, enter: `Curió PDF v1.1.2`.
-4. In the description box, paste the v1.1.2 changelog.
-5. **Attach the binary:** Drag and drop `openstore/leitorpdf.braga_1.1.2_all.click` into the *Attach binaries by dropping them here* box.
+2. Under **Choose a tag**, select **`v1.1.3`**.
+3. In **Release title**, enter: `Curió PDF v1.1.3`.
+4. In the description box, paste the v1.1.3 changelog.
+5. **Attach the binary:** Drag and drop `openstore/leitorpdf.braga_1.1.3_all.click` into the *Attach binaries by dropping them here* box.
 6. Click **Publish release**.

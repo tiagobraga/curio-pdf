@@ -27,7 +27,12 @@ tags:
   - study
 license: MIT
 changelog: |
+  v1.1.3:
+  - Correção no gesto de pinça: barras e interface permanecem fixas e apenas o documento recebe zoom.
+  - Correção na navegação com zoom: conteúdo do PDF pode ser arrastado livremente em qualquer direção.
+  - Adição do botão "Sobre" na barra inferior e na tela inicial com informações do projeto e links.
   v1.1.2:
+  - Docking da paleta de cores de destaque na borda da tela sem cobrir o texto selecionado.
   - Correção na ferramenta de marcação de texto (inicia neutra e fica laranja apenas quando ativada).
   - Correção na seleção de texto na camada do PDF para inserção de destaques.
   - Otimização para eventos de toque no Ubuntu Touch.

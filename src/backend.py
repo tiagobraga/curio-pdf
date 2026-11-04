@@ -209,7 +209,7 @@ class CurioBackend:
                 route = parsed.path
 
                 if route == "/api/health":
-                    self._send_json({"ok": True, "app": "curio-pdf", "version": "1.1.2"})
+                    self._send_json({"ok": True, "app": "curio-pdf", "version": "1.1.3"})
                 elif route == "/api/pending-files":
                     self._send_json({"success": True, "files": backend_ref.pop_pending_files()})
                 else:

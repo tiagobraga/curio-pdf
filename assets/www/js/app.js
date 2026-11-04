@@ -41,6 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnZoomIn: document.getElementById('btn-zoom-in'),
     btnHighlightToggle: document.getElementById('btn-highlight-toggle'),
     btnExport: document.getElementById('btn-export'),
+    btnAbout: document.getElementById('btn-about'),
+    btnHomeAbout: document.getElementById('btn-home-about'),
+    aboutModal: document.getElementById('about-modal'),
+    aboutModalBackdrop: document.getElementById('about-modal-backdrop'),
+    btnAboutClose: document.getElementById('btn-about-close'),
 
     drawer: document.getElementById('drawer'),
     drawerBackdrop: document.getElementById('drawer-backdrop'),
@@ -368,39 +373,109 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Gesto de Pinch-to-zoom exclusivo nas páginas do PDF (mantém ferramentas e paletas no tamanho original)
+  // Bloqueio rigoroso de zoom na viewport do Chromium (mantém barras e UI sempre fixas)
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 1) {
+      if (!elements.pdfContainer || !elements.pdfContainer.contains(e.target)) {
+        e.preventDefault();
+      }
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // 1. Arrastar/rolar o PDF com 1 dedo (panning suave horizontal e vertical ao dar zoom)
+  let isTouchPanning = false;
+  let panStartX = 0;
+  let panStartY = 0;
+  let panStartScrollLeft = 0;
+  let panStartScrollTop = 0;
+
+  elements.pdfContainer.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1 && (!highlighter || highlighter.activeMode !== 'ink')) {
+      if (highlighter && highlighter.activeMode === 'text' && e.target.closest('.textLayer')) {
+        return;
+      }
+      isTouchPanning = true;
+      panStartX = e.touches[0].clientX;
+      panStartY = e.touches[0].clientY;
+      panStartScrollLeft = elements.pdfContainer.scrollLeft;
+      panStartScrollTop = elements.pdfContainer.scrollTop;
+    } else {
+      isTouchPanning = false;
+    }
+  }, { passive: true });
+
+  elements.pdfContainer.addEventListener('touchmove', (e) => {
+    if (isTouchPanning && e.touches.length === 1) {
+      const dx = e.touches[0].clientX - panStartX;
+      const dy = e.touches[0].clientY - panStartY;
+      elements.pdfContainer.scrollLeft = panStartScrollLeft - dx;
+      elements.pdfContainer.scrollTop = panStartScrollTop - dy;
+    }
+  }, { passive: true });
+
+  elements.pdfContainer.addEventListener('touchend', () => {
+    isTouchPanning = false;
+  }, { passive: true });
+
+  elements.pdfContainer.addEventListener('touchcancel', () => {
+    isTouchPanning = false;
+  }, { passive: true });
+
+  // 2. Gesto de Pinch-to-zoom com aceleração GPU exclusivo nas páginas do PDF
   let initialPinchDist = null;
   let initialPinchZoom = 1.0;
+  let isPinching = false;
+  let currentPinchRatio = 1.0;
 
   elements.pdfContainer.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
+      isTouchPanning = false;
+      isPinching = true;
+      e.preventDefault();
       initialPinchDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
       initialPinchZoom = pdfViewer.zoomMultiplier;
+      currentPinchRatio = 1.0;
     }
-  }, { passive: true });
+  }, { passive: false });
 
   elements.pdfContainer.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2 && initialPinchDist) {
+    if (e.touches.length === 2 && initialPinchDist && isPinching) {
+      e.preventDefault();
       const currentDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      const ratio = currentDist / initialPinchDist;
-      const targetZoom = initialPinchZoom * ratio;
-      if (Math.abs(targetZoom - pdfViewer.zoomMultiplier) > 0.12) {
-        pdfViewer.setZoomTo(targetZoom);
+      currentPinchRatio = currentDist / initialPinchDist;
+      const pagesWrapper = elements.pdfContainer.querySelector('.pdf-pages-wrapper');
+      if (pagesWrapper) {
+        pagesWrapper.style.transform = `scale(${currentPinchRatio})`;
       }
     }
-  }, { passive: true });
+  }, { passive: false });
 
   elements.pdfContainer.addEventListener('touchend', (e) => {
-    if (e.touches.length < 2) {
+    if (isPinching && initialPinchDist) {
+      isPinching = false;
+      const pagesWrapper = elements.pdfContainer.querySelector('.pdf-pages-wrapper');
+      if (pagesWrapper) {
+        pagesWrapper.style.transform = '';
+      }
+      if (Math.abs(currentPinchRatio - 1.0) > 0.05) {
+        const targetZoom = initialPinchZoom * currentPinchRatio;
+        pdfViewer.setZoomTo(targetZoom);
+      }
       initialPinchDist = null;
     }
-  }, { passive: true });
+  }, { passive: false });
 
   // Tema Noturno
   elements.btnTheme.addEventListener('click', () => {
@@ -475,6 +550,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   elements.btnOutline.addEventListener('click', openDrawer);
   elements.btnDrawerClose.addEventListener('click', closeDrawer);
   elements.drawerBackdrop.addEventListener('click', closeDrawer);
+
+  // Modal Sobre / About
+  function openAboutModal() {
+    if (elements.aboutModal && elements.aboutModalBackdrop) {
+      elements.aboutModal.style.display = 'flex';
+      elements.aboutModalBackdrop.style.display = 'block';
+    }
+  }
+
+  function closeAboutModal() {
+    if (elements.aboutModal && elements.aboutModalBackdrop) {
+      elements.aboutModal.style.display = 'none';
+      elements.aboutModalBackdrop.style.display = 'none';
+    }
+  }
+
+  if (elements.btnAbout) elements.btnAbout.addEventListener('click', openAboutModal);
+  if (elements.btnHomeAbout) elements.btnHomeAbout.addEventListener('click', openAboutModal);
+  if (elements.btnAboutClose) elements.btnAboutClose.addEventListener('click', closeAboutModal);
+  if (elements.aboutModalBackdrop) elements.aboutModalBackdrop.addEventListener('click', closeAboutModal);
 
   elements.tabOutline.addEventListener('click', () => {
     elements.tabOutline.classList.add('active');

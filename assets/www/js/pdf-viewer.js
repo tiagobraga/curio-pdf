@@ -143,6 +143,10 @@ class PdfViewer {
   }
 
   _createPagePlaceholders() {
+    this.pagesWrapper = document.createElement('div');
+    this.pagesWrapper.className = 'pdf-pages-wrapper';
+    this.container.appendChild(this.pagesWrapper);
+
     const containerW = this.container.clientWidth || window.innerWidth;
     const targetCssWidth = Math.min(760, Math.max(280, containerW - 24));
     const baseW = (this.baseViewport && this.baseViewport.width > 0) ? this.baseViewport.width : 595.28;
@@ -179,7 +183,7 @@ class PdfViewer {
       inkCanvas.height = height;
       pageEl.appendChild(inkCanvas);
 
-      this.container.appendChild(pageEl);
+      this.pagesWrapper.appendChild(pageEl);
       this.pageContainers.push(pageEl);
     }
   }
