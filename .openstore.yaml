@@ -1,6 +1,6 @@
 name: leitorpdf.braga
 title: Curió PDF
-summary: Leitor de PDF minimalista.
+summary: Leitor de PDF minimalista com rolagem contínua e marca-texto inteligente.
 description: |
   Curió PDF é um aplicativo minimalista, rápido e moderno projetado especificamente para o ambiente móvel do Ubuntu Touch.
   
@@ -26,3 +26,9 @@ tags:
   - viewer
   - study
 license: MIT
+changelog: |
+  v1.1.2:
+  - Correção na ferramenta de marcação de texto (inicia neutra e fica laranja apenas quando ativada).
+  - Correção na seleção de texto na camada do PDF para inserção de destaques.
+  - Otimização para eventos de toque no Ubuntu Touch.
+  - Melhorias de contraste e estabilidade geral.
