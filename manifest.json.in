@@ -1,13 +1,13 @@
 {
-    "name": "leitorpdf.braga",
+    "name": "curio-pdf",
     "description": "Leitor de PDF minimalista.",
     "architecture": "all",
     "title": "Curió PDF",
     "hooks": {
-        "leitorpdf": {
-            "apparmor": "leitorpdf.apparmor",
-            "desktop": "leitorpdf.desktop",
-            "content-hub": "leitorpdf.content-hub"
+        "curio-pdf": {
+            "apparmor": "curio-pdf.apparmor",
+            "desktop": "curio-pdf.desktop",
+            "content-hub": "curio-pdf.content-hub"
         }
     },
     "version": "1.1.3",

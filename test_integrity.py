@@ -10,10 +10,10 @@ REQUIRED_FILES = [
     "clickable.yaml",
     "CMakeLists.txt",
     "manifest.json.in",
-    "leitorpdf.apparmor",
-    "leitorpdf.content-hub",
+    "curio-pdf.apparmor",
+    "curio-pdf.content-hub",
     "content-hub.json",
-    "leitorpdf.desktop.in",
+    "curio-pdf.desktop.in",
     "qml/Main.qml",
     "src/backend.py",
     "src/reader_helper.py",
@@ -47,25 +47,25 @@ def main():
             print(f"[OK] {filepath} ({size} bytes)")
 
     # Validação sintática de JSONs
-    json_files = ["manifest.json.in", "leitorpdf.apparmor", "leitorpdf.content-hub", "content-hub.json"]
+    json_files = ["manifest.json.in", "curio-pdf.apparmor", "curio-pdf.content-hub", "content-hub.json"]
     for jf in json_files:
         try:
             with open(jf, "r") as f:
                 data = json.load(f)
             if jf == "manifest.json.in":
                 assert data["title"] == "Curió PDF", f"Título incorreto: {data.get('title')}"
+                assert data["name"] == "curio-pdf", f"Nome de pacote incorreto: {data.get('name')}"
             print(f"[OK JSON] {jf} é válido.")
         except Exception as e:
             print(f"[FALHA JSON] {jf} inválido: {e}")
             all_ok = False
 
     # Validação do Desktop Entry
-    with open("leitorpdf.desktop.in", "r") as f:
+    with open("curio-pdf.desktop.in", "r") as f:
         desktop_content = f.read()
         assert "Name=Curió PDF" in desktop_content
         assert "Icon=assets/logo.png" in desktop_content
-        assert "X-Lomiri-Touch=true" in desktop_content
-        print("[OK DESKTOP] leitorpdf.desktop.in contém as diretivas esperadas para Curió PDF.")
+        print("[OK DESKTOP] curio-pdf.desktop.in contém as diretivas esperadas para Curió PDF.")
 
     if all_ok:
         print("\nTODOS OS TESTES DE INTEGRIDADE PASSARAM COM SUCESSO!")

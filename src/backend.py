@@ -23,7 +23,7 @@ try:
 except ImportError:
     pyotherside = None
 
-APP_ID = "leitorpdf.braga"
+APP_ID = "curio-pdf"
 
 
 def _notify_qml(event_name: str, payload: Any = None) -> None:

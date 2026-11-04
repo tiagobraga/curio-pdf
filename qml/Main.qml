@@ -8,7 +8,7 @@ import io.thp.pyotherside 1.5
 MainView {
     id: rootMain
     objectName: "mainView"
-    applicationName: "leitorpdf.braga"
+    applicationName: "curio-pdf"
     automaticOrientation: true
 
     width: units.gu(45)

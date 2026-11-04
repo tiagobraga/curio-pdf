@@ -6,15 +6,11 @@ This folder contains the compiled `.click` packages along with all metadata, tex
 
 ## 📦 1. Available `.click` Packages
 
-* **Current Release:** [`leitorpdf.braga_1.1.3_all.click`](leitorpdf.braga_1.1.3_all.click) (1.2 MB)
+* **Current Release:** [`curio-pdf_1.1.3_all.click`](curio-pdf_1.1.3_all.click) (1.2 MB)
+  * **Package Name:** `curio-pdf`
   * **Architecture:** `all` (multi-arch: `arm64`, `armhf`, `amd64`)
   * **Framework:** `ubuntu-touch-24.04-1.x` (compatible with both Ubuntu Touch Focal 20.04 and Noble 24.04)
   * **Clickable Review Status:** `pass` (fully compliant with Lomiri security and confinement standards)
-* **Previous Versions:**
-  * `leitorpdf.braga_1.1.2_all.click`
-  * `leitorpdf.braga_1.1.1_all.click`
-  * `leitorpdf.braga_1.1.0_all.click`
-  * `leitorpdf.braga_1.0.0_all.click`
 
 ---
 
@@ -22,7 +18,7 @@ This folder contains the compiled `.click` packages along with all metadata, tex
 
 ### Package Name
 ```text
-leitorpdf.braga
+curio-pdf
 ```
 
 ### Application Title
@@ -113,13 +109,13 @@ v1.1.3:
    * If you have already registered the app before, go to **My Apps** and select Curió PDF to upload a new release.
 
 3. **Fill in Details:**
-   * **Package Name:** `leitorpdf.braga`
+   * **Package Name:** `curio-pdf`
    * Paste the **Title**, **Summary / Tagline**, **Description**, choose **Office** under Category, and set the **Tags**.
    * Add the **Changelog for v1.1.3**.
 
 4. **Upload the `.click` Package:**
    * In the package upload field, upload:
-     `openstore/leitorpdf.braga_1.1.3_all.click`
+     `openstore/curio-pdf_1.1.3_all.click`
 
 5. **Screenshots:**
    * It is highly recommended to upload 2 to 4 screenshots from your phone:
@@ -166,5 +162,5 @@ git push -u origin main --tags
 2. Under **Choose a tag**, select **`v1.1.3`**.
 3. In **Release title**, enter: `Curió PDF v1.1.3`.
 4. In the description box, paste the v1.1.3 changelog.
-5. **Attach the binary:** Drag and drop `openstore/leitorpdf.braga_1.1.3_all.click` into the *Attach binaries by dropping them here* box.
+5. **Attach the binary:** Drag and drop `openstore/curio-pdf_1.1.3_all.click` into the *Attach binaries by dropping them here* box.
 6. Click **Publish release**.

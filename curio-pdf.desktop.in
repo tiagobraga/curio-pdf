@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Curió PDF
+Comment=Leitor minimalista de PDF com rolagem contínua e marca-texto
+Exec=qmlscene %u qml/Main.qml
+Icon=assets/logo.png
+Terminal=false
+Type=Application
+Categories=Office;Viewer;
+MimeType=application/pdf;x-pdf;
+X-Lomiri-Touch=true
+X-Lomiri-Single-Instance=true
